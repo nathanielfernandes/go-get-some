@@ -20,7 +20,7 @@ func board(w http.ResponseWriter, r *http.Request) {
 	}
 
 	buf := new(bytes.Buffer)
-	im, err := manip.StringStuff("Programming Languages", fields)
+	im, err := manip.StringStuff(params.Get("title"), fields)
 	if err != nil {
 		http.Error(w, "Failed To Generate", http.StatusInternalServerError)
 		return
