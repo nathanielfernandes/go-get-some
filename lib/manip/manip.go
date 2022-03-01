@@ -3,9 +3,72 @@ package manip
 import (
 	"image"
 	"main/lib/helpers"
+	"strings"
 
 	"github.com/fogleman/gg"
 )
+
+type dims struct {
+	Name string
+	X    float64
+	Y    float64
+}
+
+var FIELD_POSITIONS = []dims{
+	{"Name", 1026.0, 320.0},
+	{"Pronouns", 1026.0, 455.0},
+	{"Exp. Level", 1026.0, 590.0},
+	{"Education", 620.0, 725.0},
+	{"School", 620.0, 860.0},
+	{"Fave Movie", 620.0, 995.0},
+}
+
+var DISCORD_PASS = helpers.GetImage("./static/discordpass.png")
+var BLANK = helpers.GetImage("./static/blank.png")
+
+const EOP = 1882.0
+
+func DiscordPass(fields map[string]string) (image.Image, error) {
+	const NAME_SIZE = 40
+	const TEXT_COLOR = "#ffffff"
+
+	const VALUE_SIZE = 50
+
+	dc := gg.NewContextForImage(DISCORD_PASS)
+	dc.SetHexColor(TEXT_COLOR)
+
+	im, err := helpers.GetImageUrl(fields["Image"], 360, 360)
+	if err == nil {
+		pfpc := gg.NewContext(360, 360)
+		pfpc.DrawRoundedRectangle(0, 0, 360.0, 360.0, 18.0)
+		pfpc.Clip()
+		pfpc.SetColor(image.White)
+
+		pfpc.DrawImage(BLANK, 0, 0)
+		pfpc.DrawImage(im, 0, 0)
+
+		dc.DrawImage(pfpc.Image(), 620, 276)
+	}
+
+	if err := dc.LoadFontFace("./fonts/coolvetica.ttf", NAME_SIZE); err != nil {
+		return nil, err
+	}
+
+	for _, dim := range FIELD_POSITIONS {
+		dc.DrawStringAnchored(dim.Name, dim.X, dim.Y, 0, 0.5)
+	}
+
+	if err := dc.LoadFontFace("./fonts/coolvetica.ttf", VALUE_SIZE); err != nil {
+		return nil, err
+	}
+
+	for _, dim := range FIELD_POSITIONS {
+		dc.DrawStringAnchored(strings.ToUpper(fields[dim.Name]), EOP, dim.Y, 1.0, 0.5)
+
+	}
+
+	return dc.Image(), nil
+}
 
 func StringStuff(title string, fields map[string]string) (image.Image, error) {
 	const EMOJI_SIZE = 64

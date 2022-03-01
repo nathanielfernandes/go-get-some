@@ -2,14 +2,33 @@ package helpers
 
 import (
 	"errors"
+	"fmt"
 	"image"
+	"os"
 
 	"net/http"
 
 	"github.com/nfnt/resize"
 )
 
-func GetImage(url string, w, h uint) (image.Image, error) {
+func GetImage(fp string) image.Image {
+	f, err := os.Open(fp)
+	if err != nil {
+		fmt.Println("Error: File could not be opened")
+		os.Exit(1)
+	}
+	defer f.Close()
+
+	im, _, err := image.Decode(f)
+	if err != nil {
+		fmt.Println("Error: Image could not be decoded")
+		os.Exit(1)
+	}
+
+	return im
+}
+
+func GetImageUrl(url string, w, h uint) (image.Image, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -28,5 +47,5 @@ func GetImage(url string, w, h uint) (image.Image, error) {
 }
 
 func GetEmoji(e string, s uint) (image.Image, error) {
-	return GetImage("https://cdn.discordapp.com/emojis/"+e+".png", s, s)
+	return GetImageUrl("https://cdn.discordapp.com/emojis/"+e+".png", s, s)
 }
