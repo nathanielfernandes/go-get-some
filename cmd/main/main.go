@@ -1,38 +1,28 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"image/png"
 	"log"
+	"main/lib/helpers"
 	"main/lib/manip"
 	"net/http"
 )
 
 func discordpass(w http.ResponseWriter, r *http.Request) {
 	params := r.URL.Query()
-
 	fields := map[string]string{}
 	for k, v := range params {
 		fields[k] = v[0]
 	}
 
-	buf := new(bytes.Buffer)
-
 	im, err := manip.DiscordPass(fields)
+
 	if err != nil {
 		http.Error(w, "Failed To Generate", http.StatusInternalServerError)
 		return
 	}
 
-	err = png.Encode(buf, im)
-	if err != nil {
-		http.Error(w, "Failed To Generate", http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "image/png")
-	w.Write(buf.Bytes())
+	helpers.ImageResponse(&im, w)
 }
 
 func board(w http.ResponseWriter, r *http.Request) {
@@ -45,20 +35,14 @@ func board(w http.ResponseWriter, r *http.Request) {
 		fields[k] = v[0]
 	}
 
-	buf := new(bytes.Buffer)
 	im, err := manip.StringStuff(params.Get("title"), fields)
+
 	if err != nil {
 		http.Error(w, "Failed To Generate", http.StatusInternalServerError)
 		return
 	}
-	err = png.Encode(buf, im)
-	if err != nil {
-		http.Error(w, "Failed To Generate", http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "image/png")
-	w.Write(buf.Bytes())
+
+	helpers.ImageResponse(&im, w)
 }
 
 func main() {

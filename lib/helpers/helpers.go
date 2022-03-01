@@ -1,9 +1,11 @@
 package helpers
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"image"
+	"image/png"
 	"os"
 
 	"net/http"
@@ -48,4 +50,16 @@ func GetImageUrl(url string, w, h uint) (image.Image, error) {
 
 func GetEmoji(e string, s uint) (image.Image, error) {
 	return GetImageUrl("https://cdn.discordapp.com/emojis/"+e+".png", s, s)
+}
+
+func ImageResponse(im *image.Image, w http.ResponseWriter) {
+	buf := new(bytes.Buffer)
+	err := png.Encode(buf, *im)
+	if err != nil {
+		http.Error(w, "Failed To Encode Image", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "image/png")
+	w.Write(buf.Bytes())
 }
