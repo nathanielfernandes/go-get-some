@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"net/http"
+	"strconv"
 
 	"github.com/nfnt/resize"
 )
@@ -49,6 +50,11 @@ func GetImageUrl(url string, w, h uint) (image.Image, error) {
 }
 
 func GetEmoji(e string, s uint) (image.Image, error) {
+	_, err := strconv.ParseFloat(e, 64)
+	if err != nil {
+		return GetImageUrl("https://emojicdn.elk.sh/"+e+"?style=twitter", s, s)
+	}
+
 	return GetImageUrl("https://cdn.discordapp.com/emojis/"+e+".png", s, s)
 }
 
