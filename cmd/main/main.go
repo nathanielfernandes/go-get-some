@@ -47,10 +47,10 @@ func board(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/board", board)
-	http.HandleFunc("/discordpass", discordpass)
+	http.HandleFunc("/passport", discordpass)
 
 	fmt.Printf("Go Get Some\nListening on port 80\n")
-	if err := http.ListenAndServe("0.0.0.0:80", nil); err != nil {
+	if err := http.ListenAndServe("127.0.0.1:8000", nil); err != nil {
 		log.Fatal(err)
 	}
 }
