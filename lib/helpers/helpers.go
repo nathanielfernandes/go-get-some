@@ -31,6 +31,21 @@ func GetImage(fp string) image.Image {
 	return im
 }
 
+func GetImageSize(fp string, w, h uint) (image.Image, error) {
+	f, err := os.Open(fp)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	im, _, err := image.Decode(f)
+	if err != nil {
+		return im, err
+	}
+
+	return resize.Resize(w, h, im, resize.Bilinear), nil
+}
+
 func GetImageUrl(url string, w, h uint) (image.Image, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -39,7 +54,7 @@ func GetImageUrl(url string, w, h uint) (image.Image, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, errors.New("Non 200 status")
+		return nil, errors.New("non 200 status")
 	}
 	im, _, err := image.Decode(resp.Body)
 

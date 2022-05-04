@@ -40,7 +40,13 @@ func DiscordPass(fields map[string]string) (image.Image, error) {
 	dc := gg.NewContextForImage(DISCORD_PASS)
 	dc.SetHexColor(TEXT_COLOR)
 
-	im, err := helpers.GetImageUrl(fields["Image"], 360, 360)
+	var im image.Image
+	var err error
+	if eggward, ok := fields["eggward"]; ok {
+		im, err = helpers.GetImageSize("./static/eggward_"+eggward+".png", 360, 360)
+	} else {
+		im, err = helpers.GetImageUrl(fields["Image"], 360, 360)
+	}
 	if err == nil {
 		pfpc := gg.NewContext(360, 360)
 		pfpc.DrawRoundedRectangle(0, 0, 360.0, 360.0, 18.0)
