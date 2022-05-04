@@ -88,6 +88,8 @@ func DiscordPass(fields map[string]string) (image.Image, error) {
 
 	if seat, ok := fields["theater"]; ok {
 		dc.DrawStringAnchored(strings.ToUpper(seat), 1130.0, 1106.0, 0.0, 0.5)
+	} else {
+		dc.DrawStringAnchored("01", 1130.0, 1106.0, 0.0, 0.5)
 	}
 
 	// qr, _ := qrcode.Encode(fields["qr"], qrcode.Medium, 340)
