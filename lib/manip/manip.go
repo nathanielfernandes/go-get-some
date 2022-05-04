@@ -26,7 +26,8 @@ var FIELD_POSITIONS = []dims{
 }
 
 var DISCORD_PASS = helpers.GetImage("./static/pass.png")
-var BLANK = helpers.GetImage("./static/blank.png")
+
+// var BLANK = helpers.GetImage("./static/blank.png") // 360x360
 
 const EOP = 1882.0
 
@@ -46,7 +47,14 @@ func DiscordPass(fields map[string]string) (image.Image, error) {
 		pfpc.Clip()
 		pfpc.SetColor(image.White)
 
-		pfpc.DrawImage(BLANK, 0, 0)
+		color, ok := fields["color"]
+		if !ok {
+			color = "#192029"
+		}
+
+		sq, _ := helpers.GetImageUrl("https://dummyimage.com/360x360/"+strings.ReplaceAll(color, "#", "")+"/000000.png&text=+", 360, 360)
+
+		pfpc.DrawImage(sq, 0, 0)
 		pfpc.DrawImage(im, 0, 0)
 
 		dc.DrawImage(pfpc.Image(), 620, 276)
