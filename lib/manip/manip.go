@@ -1,13 +1,11 @@
 package manip
 
 import (
-	"bytes"
 	"image"
 	"main/lib/helpers"
 	"strings"
 
 	"github.com/fogleman/gg"
-	qrcode "github.com/skip2/go-qrcode"
 )
 
 type dims struct {
@@ -82,17 +80,22 @@ func DiscordPass(fields map[string]string) (image.Image, error) {
 		dc.DrawStringAnchored(strings.ToUpper(fields[dim.Name]), EOP, dim.Y, 1.0, 0.5)
 	}
 
+	dc.SetHexColor("#000")
+
 	if seat, ok := fields["seat"]; ok {
-		dc.SetHexColor("#000")
 		dc.DrawStringAnchored(strings.ToUpper(seat), 1570.0, 1106.0, 1.0, 0.5)
 	}
 
-	qr, _ := qrcode.Encode(fields["qr"], qrcode.Medium, 340)
-	if qr != nil {
-		reader := bytes.NewReader(qr)
-		img, _, _ := image.Decode(reader)
-		dc.DrawImage(img, 130, 285)
+	if seat, ok := fields["theater"]; ok {
+		dc.DrawStringAnchored(strings.ToUpper(seat), 1171.0, 1106.0, 1.0, 0.5)
 	}
+
+	// qr, _ := qrcode.Encode(fields["qr"], qrcode.Medium, 340)
+	// if qr != nil {
+	// 	reader := bytes.NewReader(qr)
+	// 	img, _, _ := image.Decode(reader)
+	// 	dc.DrawImage(img, 130, 285)
+	// }
 
 	return dc.Image(), nil
 }
