@@ -83,11 +83,11 @@ func DiscordPass(fields map[string]string) (image.Image, error) {
 	dc.SetHexColor("#000")
 
 	if seat, ok := fields["seat"]; ok {
-		dc.DrawStringAnchored(strings.ToUpper(seat), 1570.0, 1106.0, 1.0, 0.5)
+		dc.DrawStringAnchored(strings.ToUpper(seat), 1484.0, 1106.0, 0.0, 0.5)
 	}
 
 	if seat, ok := fields["theater"]; ok {
-		dc.DrawStringAnchored(strings.ToUpper(seat), 1171.0, 1106.0, 1.0, 0.5)
+		dc.DrawStringAnchored(strings.ToUpper(seat), 1130.0, 1106.0, 0.0, 0.5)
 	}
 
 	// qr, _ := qrcode.Encode(fields["qr"], qrcode.Medium, 340)
